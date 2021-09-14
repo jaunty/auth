@@ -9,7 +9,6 @@ require (
 	github.com/holedaemon/discord v0.0.0-20210913013838-a9012fb145d2
 	github.com/jaunty/database v0.0.0-20210914041743-f7b42667c82d
 	github.com/jaunty/web v0.0.0-20210913044054-feaa6dcb709b
-	github.com/volatiletech/sqlboiler v3.7.1+incompatible
 	github.com/volatiletech/sqlboiler/v4 v4.6.0
 	github.com/zikaeroh/ctxlog v0.0.0-20210526021226-f475ac537d51
 	go.uber.org/zap v1.19.1
@@ -31,7 +30,6 @@ require (
 	github.com/skwair/harmony v0.18.1-0.20210408101644-63b40974201c // indirect
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/volatiletech/inflect v0.0.1 // indirect
-	github.com/volatiletech/null v8.0.0+incompatible // indirect
 	github.com/volatiletech/strmangle v0.0.1 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
