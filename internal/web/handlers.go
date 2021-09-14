@@ -2,6 +2,7 @@ package web
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gofrs/uuid"
@@ -133,6 +134,14 @@ func (s *Server) handleCallback(w http.ResponseWriter, r *http.Request) {
 		Expires:  expire,
 		SameSite: http.SameSiteStrictMode,
 		HttpOnly: true,
+	}
+
+	if redir == "" {
+		redir = "https://" + s.domain
+	}
+
+	if !strings.HasPrefix(redir, "https://") {
+		redir = "https://" + redir
 	}
 
 	http.SetCookie(w, cook)

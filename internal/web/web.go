@@ -16,6 +16,7 @@ import (
 var ErrInvalidOption = errors.New("auth: invalid option")
 
 type Server struct {
+	addr   string
 	domain string
 
 	s      *web.Server
@@ -27,7 +28,7 @@ type Server struct {
 	db        *sql.DB
 }
 
-func New(addr string, opts ...Option) (*Server, error) {
+func New(opts ...Option) (*Server, error) {
 	s := &Server{
 		states: make(map[string]string),
 	}
@@ -36,21 +37,43 @@ func New(addr string, opts ...Option) (*Server, error) {
 		o(s)
 	}
 
-	if s.conf == nil {
-		return nil, fmt.Errorf("%w: an OAuth2 config is required", ErrInvalidOption)
+	if err := s.verifyDefaults(); err != nil {
+		return nil, err
 	}
 
-	if s.tokenAuth == nil {
-		return nil, fmt.Errorf("%w: a TokenAuth is required", ErrInvalidOption)
+	dsc, err := discord.New(discord.WithOAuth2Config(s.conf))
+	if err != nil {
+		return nil, err
 	}
+	s.discord = dsc
 
-	srv, err := web.New(addr)
+	srv, err := web.New(s.addr)
 	if err != nil {
 		return nil, err
 	}
 
 	s.s = srv
 	return s, nil
+}
+
+func (s *Server) verifyDefaults() error {
+	if s.addr == "" {
+		return fmt.Errorf("%w: missing addr", ErrInvalidOption)
+	}
+
+	if s.db == nil {
+		return fmt.Errorf("%w: missing db", ErrInvalidOption)
+	}
+
+	if s.conf == nil {
+		return fmt.Errorf("%w: missing oauth2 config", ErrInvalidOption)
+	}
+
+	if s.tokenAuth == nil {
+		return fmt.Errorf("%w: missing jwtauth", ErrInvalidOption)
+	}
+
+	return nil
 }
 
 func (s *Server) router() *chi.Mux {
